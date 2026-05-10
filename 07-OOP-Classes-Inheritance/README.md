@@ -231,9 +231,13 @@ public String getMake() {
 
 - IntelliJ has an option to automatically generate the getters. From the right click content menu, select Generate
 
-![](images/1.png)
-![](images/2.png)
-![](images/3.png)
+<table>
+  <tr>
+    <td><img src="images/1.png" width="200"/></td>
+    <td><img src="images/2.png" width="200"/></td>
+    <td><img src="images/3.png" width="500"/></td>
+  </tr>
+</table>
 
 - Select on one or more fields to generate the getters
 

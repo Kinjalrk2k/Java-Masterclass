@@ -118,3 +118,138 @@ public class Car {
     }
 }
 ```
+
+## Getters, Encapsulation, and Object Access
+
+### Instance of a class
+
+- To create an instance of a class, we simply use the `new` keyword
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Car car = new Car();
+        car.describeCar();
+    }
+}
+```
+
+Output:
+
+```sh
+0-door null null null
+```
+
+### What is null?
+
+- null is a special keyword in Java, meaning, the variable or attribute has a type but no reference to an object.
+- This means that no instance or object is assigned to the variable or field.
+- Fields with primitive data types are never null.
+
+### Default values for fields on classes
+
+- Fields on classes are assigned default values automatically by Java, if you don't assign values yourself.
+
+<table border="1" cellspacing="0" cellpadding="8">
+  <tr>
+    <th>Data type</th>
+    <th>Default value assigned</th>
+  </tr>
+  <tr>
+    <td>boolean</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>byte</td>
+    <td rowspan="5" align="center">0</td>
+  </tr>
+  <tr>
+    <td>short</td>
+  </tr>
+  <tr>
+    <td>int</td>
+  </tr>
+  <tr>
+    <td>long</td>
+  </tr>
+  <tr>
+    <td>char</td>
+  </tr>
+  <tr>
+    <td>double</td>
+    <td rowspan="2" align="center">0.0</td>
+  </tr>
+  <tr>
+    <td>float</td>
+  </tr>
+</table>
+
+- We can also add our own default values
+
+```java
+public class Car {
+
+    //    these are fields of the class
+    private String make = "Tesla";
+    private String model = "Model X";
+    private String color = "Gray";
+    private int doors = 2;
+    private boolean convertible = true;
+
+    public void describeCar() {
+        System.out.println(doors + "-door " +
+                color + " " +
+                make + " " +
+                model +
+                (convertible ? " (convertible)" : "")
+        );
+    }
+}
+```
+
+> The private fields cannot be access outside the class anywhere!
+
+### Getters and Setters
+
+- A getter is a method on a class that retrieves the value of a private field and returns it.
+- A setter is a method on a class that sets the value of a private field.
+- The purpose of these methods is to control and protect access to private fields.
+- The getter and setter signatures are part of the class's public interface but the fields and the types aren't
+  - This means that we can change things internally like the name or type of the field, but as long as we use the same getter and setter methods, these changes should have no effect of external code that uses our class. Our internal chnages are hidden from the users.
+
+#### Getter:
+
+- A getter method usually returns the value of a private field.
+- It's usual to name a getter name with the "get" prefix followed by the name of the field (in camel case)
+- We can have getter methods for that are not really declared in our class but are derived in some way
+
+```java
+public String getMake() {
+    return make;
+}
+```
+
+- IntelliJ has an option to automatically generate the getters. From the right click content menu, select Generate
+
+![](images/1.png)
+![](images/2.png)
+![](images/3.png)
+
+- Select on one or more fields to generate the getters
+
+> [!NOTE]
+>
+> ```java
+> public boolean isConvertible() {
+>     return convertible;
+> }
+> ```
+>
+> For boolean fields the "is" prefix is used
+
+#### Setter:
+
+- A setter method may simply assign the argument passed to the method to the field.
+- It can contain code to validate data, check additional security requirements, ensure immutability of the field value or any other code required to protect and validate an object's state.
+- It's usual to name a setter methid with a "set" prefix followed by the name of the field (in camel case)
+- There might be a case where we wont need a setter method for a private field because maybe it's data only needed within the class itself and doesn't need to be exposed to the outer world.

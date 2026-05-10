@@ -257,3 +257,76 @@ public String getMake() {
 - It can contain code to validate data, check additional security requirements, ensure immutability of the field value or any other code required to protect and validate an object's state.
 - It's usual to name a setter methid with a "set" prefix followed by the name of the field (in camel case)
 - There might be a case where we wont need a setter method for a private field because maybe it's data only needed within the class itself and doesn't need to be exposed to the outer world.
+- Setter methods doesn't return anything, so they are void
+- Settings can be gnerated through IntelliJ same as getters
+
+<table>
+<tr>
+<td>
+
+```java
+public void setMake(String make) {
+    make = make;
+    // here there is an ambiguity with the
+    // field name and the parameter name
+    // of the method
+}
+```
+
+</td>
+<td>
+
+```java
+public void setMake(String make) {
+    this.make = make;
+    // this keyword is used to solve the ambiguity
+}
+```
+
+</td>
+</tr>
+</table>
+
+- Various validations can be done with the setters
+
+```java
+public void setMake(String make) {
+    if(make == null) make = "Unknown";
+    String lowercaseMake = make.toLowerCase();
+    switch (lowercaseMake) {
+        case "holden", "porsche", "tesla" -> this.make = make;
+        default -> {
+            this.make = "Unsupported";
+        }
+    }
+}
+```
+
+### `this`
+
+- `this` is a special keyword in Java.
+- What it really refers to is the instance that was created when the object was instantiated.
+- So, `this` is a special reference name for the object or instance, which it can use to describe itself.
+- And we can use `this` to access fields on the class.
+
+### Uninitialized variables
+
+- This would cause an error as we didn't initialized the variable with the `new` keyword
+
+```java
+Car car;
+car.setMake("Porsche");
+```
+
+> Compilation Error: `java: variable car might not have been initialized`
+
+- But if we set the variable to `null`, it wont throw a compilation error, but a runtime error (Exception). This means we have defined a variable of `Car` but it doen't have a reference to a valid instance of a `Car`, so we cant run a method on `null`
+
+```java
+Car car = null;
+car.setMake("Porsche");
+```
+
+> Runtime Error: `Cannot invoke "Car.setMake(String)" because "car" is null`
+
+- So, an uninitialized variables causes a compile time error, but a variable with a null reference can be used in the code without a compiler error but it'll throw an exception in the runtime. So, when creating objects, we should ideally use the `new` keyword followed the name of the class and optionally any arguments.

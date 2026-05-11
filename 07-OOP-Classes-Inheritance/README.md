@@ -308,6 +308,7 @@ public void setMake(String make) {
 - What it really refers to is the instance that was created when the object was instantiated.
 - So, `this` is a special reference name for the object or instance, which it can use to describe itself.
 - And we can use `this` to access fields on the class.
+- `this` keyword is optional and can be used to fix ambiguity. It's usability sometimes depends on readability. Idealy it's preferable to use `this` to remove any confusion that it's refering to a field of the class
 
 ### Uninitialized variables
 

@@ -703,3 +703,149 @@ flowchart TD
     B -- YES --> C["It should probably be an instance method"]
     B -- NO --> D["It should probably be a static method"]
 ```
+
+## Plain Old Java Object
+
+- A plain old Java object (whose acronym is POJO) is a class that generally only has instance fields.
+- It's used to house data and pass data between functional classes.
+- It usually has no other, or very few methods, other than getters and setters for the instance fields.
+- Many database frameworks use POJO's to read data from, or to write data to databases, files or streams.
+- A POJO also might be called a bean or a JavaBean.
+- A JavaBean is just a POJO with some extra rules applied to it.
+- A POJO is sometimes called an Entity because it mirrors database entities.
+- Another acronym is DTO for Data Transfer Object.
+- It's a description of an object that can be modeled as just data.
+- There are many generation tools that will turn a data model into generated POJO's or JavaBeans.
+- You've seen an example of similar code generation in Intelli, which allowed me to generate getters, setters, and constructors in a uniform way.
+- These are boilerplate code, It's code that's repetitive and follows a pattern, which is why code generation tools can create it for us.
+
+```java
+public class Student {
+    private String id;
+    private String name;
+    private String dateOfBirth;
+    private String classList;
+
+    public Student(String id, String name, String dateOfBirth, String classList) {
+        this.id = id;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.classList = classList;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", classList='" + classList + '\'' +
+                '}';
+    }
+
+    // ... and getters and setters
+}
+
+```
+
+> - `toString()` can be generated through IntelliJ which helps in printing the data in a class
+> - If a class has the `toString()` method defined, we can directly print the object using `System.out.println(obj)` (that is we do not explicitly call the `.toString()` method)
+> - Every object, when passed to println, will have the `toString` method implicitly executed if you've created that method on your class.
+
+### Annotations
+
+- Annotations are a type of metadata.
+- Metadata is a way to formally describe additional information about our code.
+- Annotations are more structured and have more meaning than comments.
+- This is because they can be used by the compiler or other types of pre-processing functions, to get information about the code.
+- Metadata doesn't affect how the code runs so this code will still run with or without the annotation.
+
+```java
+@Override // annotation
+public String toString() {
+    return "Student{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", dateOfBirth='" + dateOfBirth + '\'' +
+            ", classList='" + classList + '\'' +
+            '}';
+}
+```
+
+### Overridden method
+
+- An overridden method is not the same thing as an overloaded method.
+- An overridden method is a special method in Java that other classes can implement if they use a specified method signature.
+
+## Java Records: Modern POJO Approach
+
+### POJO vs Record
+
+- Plain Old Java Object comes with a lot of boilerplate code.
+- It's the code that's repetitive and follows certain rules.
+- Once created, this code is rarely looked at, or modified.
+- In fact, there are tools that'll just regenerate all of this code if your underlying data or domain model changes.
+
+### The Record
+
+- The record was introduced in JDK 14 and became officially part of Java in JDK 16.
+- It's purpose is to replace the boilerplate code of the POJO but to be more restrictive.
+- Java calls them "plain data carriers" (which means the record has more built in rules than a POJO would)
+- The record is a special class that contains data that's not meant to be altered.
+- In other words, it seeks to achieve immutability for the data in its members.
+- It contains only the most fundamental methods, such as constructors and accessors.
+- Best of all, you, the developer, don't have to write or generate any of this code.
+- Records can be created in IntelliJ similar to how we create classes
+
+![](images/8.png)
+
+```java
+public record LPAStudent() {
+}
+```
+
+- Instead of class, the `record` keyword is used. Additionally, there's a `()` after the record name. Within those parenthesis, we add the parameter list, similar to a constructor
+
+```java
+public record LPAStudent(String id, String name, String dateOfBirth, String classList) {
+}
+```
+
+- Rest, it can be initialized like a class only
+
+```java
+LPAStudent s = new LPAStudent(...) // params are passed here like in constructo
+```
+
+### Implicit or Generated code that Java provides
+
+```java
+public record LPAStudent(String id, String name, String dateOfBirth, String classList) {
+}
+```
+
+- First, it's important to understand that the part that's in parentheses, is called the record header.
+- The record header consists of record components, a comma-delimited list of components.
+- For each component in the header, Java generates:
+  - A field with the same name and declared type as the record component.
+  - The field is declared private and final (cannot be modified)
+  - The field is sometimes referred to as a component field.
+  - Java generates a toString method that prints out each attribute in a formatted String.
+  - In addition to creating a private final field for each component, Java generates a public accessor method for each component.
+  - This method has the same name and type of the component, but it doesn't have any kind of special prefix like get or is, for example.
+  - The accessor method for id, in this example, is simply id().
+
+```java
+System.out.println(pojoStudent.getName() + "is taking class " + pojoStudent.getClassList());
+System.out.println(recordStudent.name() + "is taking class " + recordStudent.classList());
+```
+
+> Records do not have setters, as a Record's goal is to be immutable
+
+### Why are records immutable?
+
+- There are more use cases for immutable data transfer objects and keeping them well encapsulated.
+- You want to protect the data from unintended mutations.
+- If you want to modify data on your class, you won't be using the record.
+- You can use the code generation options for the POJO.
+- But if you're reading a whole lot of records from a database or file source and simply passing this data around, then the record is a big improvement.

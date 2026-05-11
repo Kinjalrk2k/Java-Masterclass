@@ -425,3 +425,101 @@ public BankAccount(String customerName, String email, String phoneNumber) {
     this("999999999", 10, customerName, email, phoneNumber);
 }
 ```
+
+## Reference vs Object vs Instance vs Class
+
+> House Analogy from the Physical World 🌏
+>
+> - A class is basically a blueprint for the house.
+> - Using the blueprint, we can build as many houses as we like based on those plans.
+> - Each house we build in other words, going back to programming terms, each house we instantiate using the new operator is an object.
+> - This object can also be known as an instance. Often, we'll say it's an instance of the class.
+> - So, we would have an instance of house in this example.
+> - Getting back to the physical world, each house we build has an address (it's built at a physical location).
+> - In other words, if we want to tell someone where we live, we give them our address (perhaps written on a piece of paper). This is known as a reference.
+> - We can copy that reference as many times as we like, but there is still just one house that we're referring to.
+> - In other words, we're copying the paper that has the address on it, not the house itself.
+> - We can pass references as parameters to constructors and methods.
+
+```java
+public class House {
+
+    private String color;
+
+    public House(String color) {
+        this.color = color;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+}
+```
+
+```java
+public class Main {
+
+    public static void main(String[] args) {
+
+        House blueHouse = new House("blue");
+        House anotherHouse = blueHouse;
+
+        System.out.println(blueHouse.getColor()); // prints blue
+        System.out.println(anotherHouse.getColor());// blue
+
+        anotherHouse.setColor("red");
+        System.out.println(blueHouse.getColor()); // red
+        System.out.println(anotherHouse.getColor());// red
+
+        House greenHouse = new House("green");
+        anotherHouse = greenHouse;
+
+        System.out.println(blueHouse.getColor()); //red
+        System.out.println(greenHouse.getColor()); // green
+        System.out.println(anotherHouse.getColor());// green
+    }
+}
+```
+
+| ![](images/4.png)                                                                                                                                                   | ![](images/5.png)                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `House blueHouse = new House("blue)`                                                                                                                                | `House anotherHouse = blueHouse`                                                                                                                         |
+| `House` is a blueprint and we are creating a new instance of `House` and assigning that to the variable `blueHouse` (It is a reference to the object in the memory) | It creates another reference to the same object in the memory. There is still one `House` object but we have two references pointing to the same object. |
+| `blueHouse.getColor()` will be `blue`                                                                                                                               | `anotherHouse.getColor()` will be `blue` as it's a reference to the same object `blueHouse`                                                              |
+| `anotherHouse.setColor("red")`                                                                                                                                      | `<-----`                                                                                                                                                 |
+| `blueHouse.getColor()` now will be `yellow` as `anotherHouse` changed the value in the same reference to the memory                                                 | `blueHouse.getColor()` will be `yellow`                                                                                                                  |
+
+| ![](images/6.png)                        | ![](images/7.png)                       |
+| ---------------------------------------- | --------------------------------------- |
+| `House greenHouse = new House("green");` | `anotherHouse = greenHouse;`            |
+| A completely new object in the memory    | Reference of `anotherHouse` changed now |
+
+> In Java, we always have an reference to an object in memory. There's no way to access an object directly. Everything is done through the reference.
+
+### The reference vs The object
+
+```java
+new House("red");
+```
+
+- Here the code compiles fine, the object is created in the memory but after this statement, there is no way our code can access this object
+- The object exists in the memory, but I can't communicate with it after the statement has executed.
+- This is because we didn't create a reference to it.
+- It'll stay in memory until Java's automatic garbage collection process figures out there's no running code with a reference to this object and deletes it.
+- In fact this object is eligible for garbage collection as soon as this line is executed.
+
+```java
+House myHouse = new House("beige");
+```
+
+- Here the reference variable has access to the object in memory as long as the variable stays in scope and/or gets reassigned to a different reference.
+
+```java
+House redHouse = new House("red");
+```
+
+- This is a totally new object in memory, and different from the last red house we created.

@@ -523,3 +523,183 @@ House redHouse = new House("red");
 ```
 
 - This is a totally new object in memory, and different from the last red house we created.
+
+## Static vs Instance Variables
+
+### Static Variables
+
+- Declared by using the keyword static.
+- Static variables are also known as static member variables.
+- Every instance of the class shares the same static variable.
+- If changes are made to that variable, all other instances of that class will see the effect of that change.
+- It is considered best practice to use the Class name and not a reference variable to access a static variable. This makes it clearer that the variable is associated with the class and therefor not stored with the instance.
+
+```java
+class Dog {
+
+    static String genus = "Canis";
+
+    void printData() {
+
+        Dog d = new Dog();
+        System.out.println(d.genus);       // Confusing!
+        System.out.println(Dog.genus);     // Clearer!
+    }
+}
+```
+
+- An instance isn't required to exist to access the value of a static variable.
+
+```java
+class Dog {
+
+    static String genus= "Canis";
+}
+
+class Main {
+
+    public static void main(String[] args) {
+        System.out.println(Dog.genus);    // No instance of Dog needs to exist, in order to access a static variable
+    }
+}
+```
+
+- Static variables aren't used very often but can sometimes be very useful.
+- They can be used for:
+  - Storing counters.
+  - Generating unique IDs.
+  - Storing a constant value that doesn't change, like PI, for example.
+  - Creating and controlling access to a shared resource. (like log files, databases, input output streams)
+
+```java
+class Dog {
+
+    private static String name;
+
+    public Dog(String name) {
+        Dog.name = name; // constructor setting the name to the static variable
+    }
+
+    public void printName() {
+        System.out.println("name = " + name);  // Using Dog.name would have made this code less confusing.
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        Dog rex = new Dog("rex");        // create instance (rex)
+        Dog fluffy = new Dog("fluffy");  // create instance (fluffy)
+        rex.printName();                 // prints fluffy
+        fluffy.printName();              // prints fluffy
+    }
+}
+
+```
+
+- Once we change the static variable, all instances will see the change we made
+
+### Instance Variables
+
+- They don't use the static keyword.
+- They're also known as fields or member variables.
+- Instance variables belong to a specific instance of a class.
+- Each instance has its own copy of an instance variable.
+- Every instance can have a different value.
+- Instance variables represent the state of a specific instance of a class.
+
+```java
+class Dog {
+
+    private String name;
+
+    public Dog(String name) {
+        this.name = name;
+    }
+
+    public void printName() {
+        System.out.println("name = " + name);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Dog rex = new Dog("rex");            // create instance (rex)
+        Dog fluffy = new Dog("fluffy");      // create instance (fluffy)
+        rex.printName();                     // prints rex
+        fluffy.printName();                  // prints fluffy
+    }
+}
+```
+
+## Static vs Instance Methods
+
+### Static Methods
+
+- Static methods are declared using a static modifier.
+- Static methods can't access instance methods and instant variables directly. They're usually used for operations that don't require any data from an instance of the class (from 'this').
+- If you remember, the this keyword is the current instance of a class.
+- Inside a static method, we can't use the this keyword.
+- Whenever you see a method that doesn't use instance variables, that method should probably be declared as a static method.
+- For example, main is a static method and it's called by the Java virtual machine when it starts the Java application.
+- Static methods do not need instance to be created for calling them.
+
+```java
+class Calculator {
+
+    public static void printSum(int a, int b) {
+        System.out.println("sum= " + (a + b));
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        Calculator.printSum(5, 10);
+        printHello();      // shorter from of Main.printHello();
+        // static methods are called as ClassName.methodName();
+        // or methodName(); only if in the same class
+    }
+
+    public static void printHello() {
+        System.out.println("Hello");
+    }
+}
+```
+
+### Instance Methods
+
+- Instance methods belong to an instance of a class.
+- To use an instance method, we have to instantiate the class first, usually by using the new keyword.
+- Instance methods can access instance methods and instance variables directly (without the this keyword)
+- Instance methods can also access static methods and static variables directly (without the class name)
+
+```java
+class Dog {
+
+    public void bark() {
+        System.out.println("woof");
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Dog rex = new Dog();  // create instance
+        rex.bark();           // call instance method
+    }
+}
+```
+
+### Static or Instance Method
+
+```mermaid
+flowchart TD
+    A["Should a method be static?"] --> B["Does it use any fields (instance variables) or instance methods?"]
+
+    B -- YES --> C["It should probably be an instance method"]
+    B -- NO --> D["It should probably be a static method"]
+```

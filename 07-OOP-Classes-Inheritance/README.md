@@ -119,7 +119,7 @@ public class Car {
 }
 ```
 
-## Getters, Encapsulation, and Object Access
+## Getters, Setters, Encapsulation, and Object Access
 
 ### Instance of a class
 
@@ -331,3 +331,97 @@ car.setMake("Porsche");
 > Runtime Error: `Cannot invoke "Car.setMake(String)" because "car" is null`
 
 - So, an uninitialized variables causes a compile time error, but a variable with a null reference can be used in the code without a compiler error but it'll throw an exception in the runtime. So, when creating objects, we should ideally use the `new` keyword followed the name of the class and optionally any arguments.
+
+## Constructors - Object initialization
+
+- A constructor is used in the creation of an object.
+- It is a special type of code block that has a specific name and parameters, much like a method.
+- It has the same name as the class itself, and it doesn't return any values.
+- You never include a return type from a constructor, not even void.
+- You can, and should, specify an appropriate access modifier to control who should be able to create new instances of the class, using this constructor.
+
+```java
+public class Account { // This is the class declaration
+  public Account() { // This is the constructor declaration
+    // Constructor code is code to be executed as the object is created.
+  }
+}
+```
+
+- Constructor can be used to set the values of fields in your instance along with other initialization code you want to perform.
+- A constructor is created implicitly by Java
+
+> By implicit in java, it means that we dont see that in the code, but its present in the bytecode that gets generated during the compilation process
+
+- When we use the `new Account()`, it actually calls the implicit constructor, as we didn't explicitly create a constructor in the first place. This is called the default construcot
+
+> Default Constructor
+>
+> - If a class contains no constructor declarations, then a default constructor is implicitly declared.
+> - This constructor has no parameters and is often called the no-args (no arguments) constructor.
+> - If a class contains any other constructor declarations, then a default constructor is NOT implicitly declared.
+
+- The purpose of the constructor is to initialize the object that we are creating and do whatever else i need to do while instantiating.
+- It's only called once when we are creating the object
+- A class can have one or many constructors one of which can be a no-args constructor
+
+```java
+// no-agrs constructor
+public BankAccount() {
+      System.out.println("Empty constructor called");
+}
+
+// args constructor
+public BankAccount(String accountNumber, float accountBalance, String customerName, String email, String phoneNumber) {
+    System.out.println("BankAccount Constructor with parameters called");
+    this.accountNumber = accountNumber;
+    this.accountBalance = accountBalance;
+    this.customerName = customerName;
+    this.email = email;
+    this.phoneNumber = phoneNumber;
+}
+```
+
+- Having multiple constructors is called constructor overloading
+
+### Constructor Overloading
+
+- Constructor overloading is declaring multiple constructors with different parameters.
+- The number of parameters can be different between constructors.
+- Or if the number of parameters is the same between two constructors, their types, or order of types must differ.
+
+## Constructors - Overloading and Chaining
+
+- Constructor chaining is when one constructor explicitly calls another overloaded constructor.
+- You can only use constructor chaining, within constructors.
+- You must use the special statement `this()` to execute another constructor, passing it arguments if required.
+- And `this()` must be the first executable statement if it's used from another constructor.
+
+```java
+public BankAccount() {
+    // chaining - must be first line
+    this("696969696969", 10, "Default Name", "Default Email", "Default Phone");
+    System.out.println("Empty constructor called");
+}
+
+public BankAccount(String accountNumber, float accountBalance, String customerName, String email, String phoneNumber) {
+    System.out.println("BankAccount Constructor with parameters called");
+    this.accountNumber = accountNumber;
+    this.accountBalance = accountBalance;
+    this.customerName = customerName;
+    this.email = email;
+    this.phoneNumber = phoneNumber;
+}
+```
+
+> It's better to assign the values directly in the constructor rather than using the setters in the constructor. It's a general rule of thumb.
+
+> IntelliJ has an option to auto-generate the constructors similar to getters and setters. We can choose the fields we want as parameters in the dialog box too.
+
+- It's a general pattern where we create one major constructor which initialized all the fields and our other overloaded constructors can call the major one (through the concept of chaining) with some hard-ceded default values for the missing fields
+
+```java
+public BankAccount(String customerName, String email, String phoneNumber) {
+    this("999999999", 10, customerName, email, phoneNumber);
+}
+```
